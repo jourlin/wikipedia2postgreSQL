@@ -3,6 +3,10 @@ INPUTURL=https://dumps.wikimedia.org/frwiki/20220201/frwiki-20220201-pages-artic
 COMPRESSED_FILE=`basename ${INPUTURL}`
 XMLFILE=`basename ${INPUTURL} .bz2`
 # Required packages :
+all:	download uncompress split split
+clean:
+	find -name "*multistream-*.xml" -exec rm {} \;
+	rm frwiki-20220201-pages-articles-multistream.xml
 download:
 	sudo apt install lbzip2
 	sudo apt install xml-twig-tools
