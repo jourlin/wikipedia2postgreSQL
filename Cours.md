@@ -16,6 +16,7 @@ WHERE (xpath('/page/title/text()', data))[1]::text='Georges Brassens'
 ```
 # XML -> SQL
 ```
+CREATE UNLOGGED TABLE wikisql AS
 SELECT 
 (xpath('/page/title/text()', data))[1]::text as title,
 (xpath('/page/id/text()', data))[1]::text as page_id,
@@ -29,4 +30,21 @@ SELECT
 (xpath('/page/revision/text/text()', data))[1]::text as content
 FROM wiki 
 OFFSET 1000 LIMIT 1
+```
+# Ajout index & contraintes
+```
+DELETE from wikisql WHERE page_id IS NULL;
+ALTER TABLE wikisql ADD PRIMARY KEY (page_id);
+```
+# Combien de contributeur uniques ?
+```
+SELECT count(distinct contrib_id) from wikisql
+```
+# Contributeurs les plus prolifiques / nb pages
+```
+SELECT contrib_name, contrib_id, count(distinct page_id) 
+from wikisql 
+GROUP BY contrib_name, contrib_id
+ORDER BY count(distinct page_id) DESC
+LIMIT 10
 ```
