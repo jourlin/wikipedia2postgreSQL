@@ -137,3 +137,21 @@ LIMIT 50
 | biophysique                                                   | 33215     |
 | Corine Land Cover                                             | 33088     |
 
+# Parsing des Infobox
+
+```
+SELECT content FROM wikisql WHERE title='Cécile Helle'
+```
+
+# Découpage par ligne
+
+```
+SELECT unnest(string_to_array(content, E'\n')) FROM wikisql WHERE title='Cécile Helle'
+```
+# Découpage sur "="
+```
+WITH lines AS (SELECT unnest(string_to_array(content, E'\n')) as line FROM wikisql WHERE title='Cécile Helle'),
+attval AS (SELECT string_to_array(line, E'=') x FROM lines)
+SELECT x[1] as attribute, x[2] as value FROM attval
+```
+
