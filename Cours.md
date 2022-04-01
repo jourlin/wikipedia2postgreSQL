@@ -152,6 +152,6 @@ SELECT unnest(string_to_array(content, E'\n')) FROM wikisql WHERE title='Cécile
 ```
 WITH lines AS (SELECT unnest(string_to_array(content, E'\n')) as line FROM wikisql WHERE title='Cécile Helle'),
 attval AS (SELECT string_to_array(line, E'=') x FROM lines)
-SELECT x[1] as attribute, x[2] as value FROM attval
+SELECT BTRIM(x[1], '| ') as attribute, x[2] as value FROM attval
 ```
 
