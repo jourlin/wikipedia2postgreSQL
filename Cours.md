@@ -32,6 +32,26 @@ SELECT
 FROM wiki 
 OFFSET 1000 LIMIT 1
 ```
+
+# Conversions de types :
+```
+ALTER TABLE wikisql ALTER COLUMN timestamp TYPE timestamp USING "timestamp"::timestamp without time zone;
+```
+
+# Laps temporel du corpus :
+```
+SELECT min(timestamp), max(timestamp) FROM wikisql;
+```
+
+# Le PID des requêtes actives
+```
+SELECT * FROM pg_stat_activity WHERE state = 'active';
+```
+
+# Annuler une requête, connaissant son PID
+```
+SELECT pg_cancel_backend(<pid of the process>)
+```
 # Ajout index & contraintes
 ```
 DELETE from wikisql WHERE page_id IS NULL;
