@@ -40,7 +40,8 @@ ALTER TABLE wikisql ALTER COLUMN timestamp TYPE timestamp USING "timestamp"::tim
 
 # Laps temporel du corpus :
 ```
-SELECT min(timestamp), max(timestamp) FROM wikisql;
+SELECT min(timestamp), maSELECT pg_cancel_backend(<pid of the process>)
+x(timestamp) FROM wikisql;
 ```
 
 # Le PID des requêtes actives
@@ -172,6 +173,32 @@ SELECT unnest(string_to_array(content, E'\n')) FROM wikisql WHERE title='Cécile
 ```
 WITH lines AS (SELECT unnest(string_to_array(content, E'\n')) as line FROM wikisql WHERE title='Cécile Helle'),
 attval AS (SELECT string_to_array(line, E'=') x FROM lines)
-SELECT BTRIM(x[1], '| ') as attribute, x[2] as value FROM attval
+SELECT BTRIM(x[1], '| ') as attribute, x[2] as value FROM attval WHERE x[2] IS NOT NULL AND x[2]<>' '
 ```
+# Combien de pages contenant une infobox "personnalité politique'
+```
+SELECT count(distinct page_id) FROM wikisql WHERE position('{{Infobox Personnalité politique' in content)>=1
+```
+
+# Toutes les fonctions répertoriées dans les Infobox de Personnalités Politiques.
+```
+WITH lines AS (SELECT unnest(string_to_array(content, E'\n')) as line FROM wikisql WHERE title='Cécile Helle'),
+attval AS (SELECT string_to_array(line, E'=') x FROM lines)
+SELECT BTRIM(x[1], '| ') as attribute, x[2] as value FROM attval WHERE x[2] IS NOT NULL AND x[2]<>' '
+```
+
+# Quelles infobox
+```
+CREATE UNLOGGED TABLE wiki_lines AS
+SELECT page_id, unnest(string_to_array(content, E'\n')) as line FROM wikisql 
+```
+280326810 ligne(s) affectée(s).
+Temps d'exécution total : 558,090.299 ms
+
+# Infoboxes en lien avec la politique :
+```
+SELECT DISTINCT line FROM wiki_lines WHERE line LIKE '{{Infobox%' AND position('olitique' in line)>=1
+```
+782 ligne(s)
+Temps d'exécution total : 22,293.464 ms
 
