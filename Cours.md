@@ -57,7 +57,7 @@ SELECT pg_cancel_backend(<pid of the process>)
 DELETE from wikisql WHERE page_id IS NULL;
 ALTER TABLE wikisql ADD PRIMARY KEY (page_id);
 ```
-# Combien de contributeur uniques ?
+# Combien de contributeurs uniques ?
 ```
 SELECT count(distinct contrib_id) from wikisql
 ```
