@@ -17,7 +17,7 @@ WHERE (xpath('/page/title/text()', data))[1]::text='Georges Brassens'
 
 # XML -> SQL
 ```
-CREATE UNLOGGED TABLE wikisql AS
+CREATE  TABLE wikisql AS
 SELECT 
 (xpath('/page/title/text()', data))[1]::text as title,
 (xpath('/page/id/text()', data))[1]::text as page_id,
@@ -40,8 +40,7 @@ ALTER TABLE wikisql ALTER COLUMN timestamp TYPE timestamp USING "timestamp"::tim
 
 # Laps temporel du corpus :
 ```
-SELECT min(timestamp), maSELECT pg_cancel_backend(<pid of the process>)
-x(timestamp) FROM wikisql;
+SELECT min(timestamp), max(timestamp) FROM wikisql;
 ```
 
 # Le PID des requêtes actives
